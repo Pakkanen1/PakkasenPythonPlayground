@@ -1,5 +1,5 @@
 import datetime as dt
-from pakkasboxi.database import Column, Model, SurrogatePK, db, reference_col, relationship
+from pakkasboxi.database import Column, Model, SurrogatePK, db, relationship
 
 class Faction(SurrogatePK, Model):
 
@@ -14,7 +14,6 @@ class Faction(SurrogatePK, Model):
     def __init__(self, name, symbol_filepath, description, hex_color, **kwargs):
         db.Model.__init__(self, name=name, symbol_filepath=symbol_filepath,
                           description=description, hex_color=hex_color, **kwargs)
-
 
 class Character(SurrogatePK, Model):
 
@@ -36,10 +35,10 @@ class Character(SurrogatePK, Model):
 class CharacterToFactionReputation(SurrogatePK, Model):
 
     __tablename__ = "charactertofactionreputations"
-    character_id = reference_col("characters", nullable=False)
-    character = relationship("Character", backref=db.backref("characters"))
-    faction_id = reference_col("factions", nullable=False)  # faction that gives the reputation
-    faction = relationship("Faction", backref=db.backref("factions"))
+    character_id = db.Column(db.Integer, db.ForeignKey("characters.id"), nullable=False)
+    character = relationship("Character", foreign_keys=[character_id])
+    faction_id = db.Column(db.Integer, db.ForeignKey("factions.id"), nullable=False)
+    faction = relationship("Faction", foreign_keys=[faction_id])
     reputation_points = db.Column(db.Integer, nullable=False)
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
@@ -50,10 +49,10 @@ class CharacterToFactionReputation(SurrogatePK, Model):
 class FactionToFactionReputation(SurrogatePK, Model):
 
     __tablename__ = "factiontofactionreputations"
-    faction_id = reference_col("factions", nullable=False)  # faction that has the reputation
-    faction = relationship("Faction", backref=db.backref("factions"))
-    target_faction_id = reference_col("factions", nullable=True)  # the faction that has given the reputation
-    target_faction = relationship("Faction", backref=db.backref("factions"))
+    faction_id = db.Column(db.Integer, db.ForeignKey("factions.id"), nullable=False)
+    faction = relationship("Faction", foreign_keys=[faction_id])
+    target_faction_id = db.Column(db.Integer, db.ForeignKey("factions.id"), nullable=False)
+    target_faction = relationship("Faction", foreign_keys=[target_faction_id])
     reputation_points = db.Column(db.Integer, nullable=False)
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)

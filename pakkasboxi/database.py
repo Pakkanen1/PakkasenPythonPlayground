@@ -1,9 +1,13 @@
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
 from .extensions import db
+from .settings import DevConfig
 
 Column = db.Column
 relationship = relationship
 Model = db.Model
+engine = create_engine(DevConfig.SQLALCHEMY_DATABASE_URI)
 
 class SurrogatePK(object):
 
@@ -12,15 +16,17 @@ class SurrogatePK(object):
 
     @classmethod
     def get_by_id(cls, record_id):
-        return cls.query.get(int(record_id))
+        with Session(engine) as session:
+            return session.get(cls, int(record_id))
+
+    @classmethod
+    def get_all(cls):
+        with Session(engine) as session:
+            return session.query(cls).all()
 
 
-def reference_col(tablename, nullable=False, pk_name='id', **kwargs):
-    """Column that adds primary key foreign key reference.
-    Usage: ::
-        category_id = reference_col('category')
-        category = relationship('Category', backref='categories')
-    """
-    return db.Column(
-        db.ForeignKey('{0}.{1}'.format(tablename, pk_name)),
-        nullable=nullable, **kwargs)
+def get_from_table_by_column_value(table, column_name, value):
+    with Session(engine) as session:
+        query = f"SELECT * FROM {table} where {column_name} = '{value}';"
+        result = session.execute(query)
+        return result.fetchall()
