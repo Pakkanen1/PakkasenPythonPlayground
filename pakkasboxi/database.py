@@ -1,5 +1,5 @@
 from sqlalchemy.orm import relationship
-from extensions import db
+from .extensions import db
 
 Column = db.Column
 relationship = relationship

@@ -7,11 +7,13 @@ class Faction(SurrogatePK, Model):
     name = Column(db.String(255), unique=True, nullable=False)
     symbol_filepath = Column(db.String(255), nullable=False)
     description = Column(db.Text, nullable=True)
+    hex_color = Column(db.String(7), nullable=False)
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
 
-    def __init__(self, name, symbol_filepath, description, **kwargs):
-        db.Model.__init__(self, name=name, symbol_filepath=symbol_filepath, description=description, **kwargs)
+    def __init__(self, name, symbol_filepath, description, hex_color, **kwargs):
+        db.Model.__init__(self, name=name, symbol_filepath=symbol_filepath,
+                          description=description, hex_color=hex_color, **kwargs)
 
 
 class Character(SurrogatePK, Model):
@@ -22,11 +24,13 @@ class Character(SurrogatePK, Model):
     # if the character is dead or somehow "inactive" they will not be displayed in the UI
     active = Column(db.Boolean, default=True)
     npc = Column(db.Boolean, default=False)
+    hex_color = Column(db.String(7), nullable=False)
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
 
-    def __init__(self, name, description, active, npc, **kwargs):
-        db.Model.__init__(self, name=name, description=description, active=active, npc=npc, **kwargs)
+    def __init__(self, name, description, active, npc, hex_color, **kwargs):
+        db.Model.__init__(self, name=name, description=description,
+                          active=active, npc=npc, hex_color=hex_color, **kwargs)
 
 
 class CharacterToFactionReputation(SurrogatePK, Model):
