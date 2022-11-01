@@ -10,6 +10,9 @@ class Faction(SurrogatePK, Model):
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
 
+    def __init__(self, name, symbol_filepath, description, **kwargs):
+        db.Model.__init__(self, name=name, symbol_filepath=symbol_filepath, description=description, **kwargs)
+
 
 class Character(SurrogatePK, Model):
 
@@ -21,6 +24,9 @@ class Character(SurrogatePK, Model):
     npc = Column(db.Boolean, default=False)
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+
+    def __init__(self, name, description, active, npc, **kwargs):
+        db.Model.__init__(self, name=name, description=description, active=active, npc=npc, **kwargs)
 
 
 class FactionReputation(SurrogatePK, Model):
@@ -35,5 +41,9 @@ class FactionReputation(SurrogatePK, Model):
     reputation_points = db.Column(db.Integer, nullable=False)
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+
+    def __init__(self, faction, related_faction, character, reputation_points, **kwargs):
+        db.Model.__init__(self, faction=faction, related_faction=related_faction,
+                          character=character, reputation_points=reputation_points, **kwargs)
 
 
