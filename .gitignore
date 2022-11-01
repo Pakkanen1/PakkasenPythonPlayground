@@ -3,3 +3,4 @@ venv
 .idea
 migrations
 pakkasboxidev.db
+__pycache__
