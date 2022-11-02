@@ -2,7 +2,7 @@ import datetime as dt
 from sqlalchemy_serializer import SerializerMixin
 from pakkasboxi.database import Column, Model, SurrogatePK, db, relationship
 
-class Faction(SurrogatePK, Model):
+class Faction(SurrogatePK, Model, SerializerMixin):
 
     __tablename__ = "factions"
     serialize_only = ("id", "name", "symbol_filepath", "description", "hex_color")
@@ -18,7 +18,7 @@ class Faction(SurrogatePK, Model):
         db.Model.__init__(self, name=name, symbol_filepath=symbol_filepath,
                           description=description, hex_color=hex_color, **kwargs)
 
-class Character(SurrogatePK, Model):
+class Character(SurrogatePK, Model, SerializerMixin):
 
     __tablename__ = "characters"
     serialize_only = ("id", "name", "description", "active", "npc", "hex_color")
@@ -37,7 +37,7 @@ class Character(SurrogatePK, Model):
                           active=active, npc=npc, hex_color=hex_color, **kwargs)
 
 
-class CharacterToFactionReputation(SurrogatePK, Model):
+class CharacterToFactionReputation(SurrogatePK, Model, SerializerMixin):
 
     __tablename__ = "charactertofactionreputations"
     serialize_only = ("id", "character_id", "faction_id", "reputation_points")
