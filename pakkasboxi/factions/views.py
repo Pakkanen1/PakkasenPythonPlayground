@@ -1,113 +1,102 @@
 from flask import Blueprint
 from sqlalchemy.orm import Session
 from pakkasboxi.database import engine
-from .models import Faction, Character, CharacterToFactionReputation, FactionToFactionReputation
+from .models import Faction, Character, CharacterToFactionReputation, FactionToFactionReputation, City, Country
 
 blueprint = Blueprint("factions", __name__)
 
-@blueprint.route("/factions")
+############
+# Factions #
+############
+
+@blueprint.route("/factionreputation")
 def load_factions_page():
     return "<p>Coming soon...</p>"
 
 @blueprint.route("/api/factions/<int:faction_id>", methods=["GET"])
 def get_faction(faction_id: int):
     faction: Faction = Faction.get_by_id(faction_id)
-    return {
-        "id": faction.id,
-        "name": faction.name,
-        "desciption": faction.description,
-        "symbol": faction.symbol_filepath,
-        "color": faction.hex_color,
-        "created": faction.created_ts,
-        "modified": faction.modified_ts
-    }
+    return faction.to_dict()
 
 @blueprint.route("/api/factions/<int:faction_id>/reputations", methods=["GET"])
 def get_faction_reputations(faction_id: int):
-    reputations = []
     with Session(engine) as session:
         query_result = session.query(FactionToFactionReputation)\
             .where(FactionToFactionReputation.faction_id == faction_id)
-        for row in query_result:
-            reputations.append(row.to_dict())
-        return reputations
+        return [row.to_dict() for row in query_result]
 
 @blueprint.route("/api/factions/<int:faction_id>/with-reputations", methods=["GET"])
 def get_faction_with_reputations(faction_id: int):
     faction = get_faction(faction_id)
     reputations = get_faction_reputations(faction_id)
-    reputations_obj = []
+    reputation_objects = []
     for r in reputations:
         obj = {
             "faction": get_faction(r["target_faction_id"]),
             "reputation": r["reputation_points"]
         }
-        reputations_obj.append(obj)
-    faction["reputations"] = reputations_obj
+        reputation_objects.append(obj)
+    faction["reputations"] = reputation_objects
     return faction
 
 @blueprint.route("/api/factions", methods=["GET"])
 def get_all_factions():
-    factions = []
-    for c in Faction.get_all():
-        factions.append(c.to_dict())
-    return factions
+    return [f.to_dict() for f in Faction.get_all()]
 
 @blueprint.route("/api/factions/reputations", methods=["GET"])
 def get_all_faction_reputations():
-    reps = []
-    for r in FactionToFactionReputation.get_all():
-        reps.append(r.to_dict())
-    return reps
+    return [r.to_dict() for r in FactionToFactionReputation.get_all()]
+
+##############
+# Characters #
+##############
 
 @blueprint.route("/api/characters/<int:character_id>", methods=["GET"])
 def get_character(character_id: int):
     character: Character = Character.get_by_id(character_id)
-    return {
-        "id": character.id,
-        "name": character.name,
-        "desciption": character.description,
-        "color": character.hex_color,
-        "is_npc": character.npc,
-        "is_active": character.active,
-        "created": character.created_ts,
-        "modified": character.modified_ts
-    }
+    return character.to_dict()
 
 @blueprint.route("/api/characters/<int:character_id>/reputations", methods=["GET"])
 def get_character_reputations(character_id: int):
-    reputations = []
     with Session(engine) as session:
         query_result = session.query(CharacterToFactionReputation) \
             .where(CharacterToFactionReputation.character_id == character_id)
-        for row in query_result:
-            reputations.append(row.to_dict())
-        return reputations
+        return [row.to_dict() for row in query_result]
 
 @blueprint.route("/api/characters/<int:character_id>/with-reputations", methods=["GET"])
 def get_character_with_reputations(character_id: int):
     character = get_character(character_id)
     reputations = get_character_reputations(character_id)
-    reputations_obj = []
+    reputation_objects = []
     for r in reputations:
         obj = {
             "faction": get_faction(r["faction_id"]),
             "reputation": r["reputation_points"]
         }
-        reputations_obj.append(obj)
-    character["reputations"] = reputations_obj
+        reputation_objects.append(obj)
+    character["reputations"] = reputation_objects
     return character
 
 @blueprint.route("/api/characters", methods=["GET"])
 def get_all_characters():
-    characters = []
-    for c in Character.get_all():
-        characters.append(c.to_dict())
-    return characters
+    return [c.to_dict() for c in Character.get_all()]
 
 @blueprint.route("/api/characters/reputations", methods=["GET"])
 def get_all_character_reputations():
-    reps = []
-    for r in CharacterToFactionReputation.get_all():
-        reps.append(r.to_dict())
-    return reps
+    return [r.to_dict() for r in CharacterToFactionReputation.get_all()]
+
+##########
+# Cities #
+##########
+
+@blueprint.route("/api/cities", methods=["GET"])
+def get_all_cities():
+    return [c.to_dict() for c in City.get_all()]
+
+#############
+# Countries #
+#############
+
+@blueprint.route("/api/countries", methods=["GET"])
+def get_all_countries():
+    return [c.to_dict() for c in Country.get_all()]

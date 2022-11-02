@@ -2,6 +2,35 @@ import datetime as dt
 from sqlalchemy_serializer import SerializerMixin
 from pakkasboxi.database import Column, Model, SurrogatePK, db, relationship
 
+class Country(SurrogatePK, Model, SerializerMixin):
+
+    __tablename__ = "countries"
+    serialize_only = ("id", "name", "description", "hex_color", "active", "symbol_filepath")
+
+    name = Column(db.String(255), unique=True, nullable=False)
+    description = Column(db.Text, nullable=True)
+    hex_color = Column(db.String(7), nullable=False)
+    active = Column(db.Boolean, default=True)
+    symbol_filepath = Column(db.String(255), nullable=False)
+    created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+    modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+
+class City(SurrogatePK, Model, SerializerMixin):
+
+    __tablename__ = "cities"
+    serialize_only = ("id", "name", "description", "country_id", "hex_color", "active", "capital", "symbol_filepath")
+
+    name = Column(db.String(255), unique=True, nullable=False)
+    description = Column(db.Text, nullable=True)
+    hex_color = Column(db.String(7), nullable=False)
+    active = Column(db.Boolean, default=True)
+    capital = Column(db.Boolean, default=True)
+    country_id = db.Column(db.Integer, db.ForeignKey("countries.id"), nullable=True)
+    country = relationship("Country", foreign_keys=[country_id])
+    symbol_filepath = Column(db.String(255), nullable=False)
+    created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+    modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+
 class Faction(SurrogatePK, Model, SerializerMixin):
 
     __tablename__ = "factions"
@@ -11,6 +40,8 @@ class Faction(SurrogatePK, Model, SerializerMixin):
     symbol_filepath = Column(db.String(255), nullable=False)
     description = Column(db.Text, nullable=True)
     hex_color = Column(db.String(7), nullable=False)
+    home_city_id = db.Column(db.Integer, db.ForeignKey("cities.id"), nullable=True)
+    home_city = relationship("City", foreign_keys=[home_city_id])
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
 
