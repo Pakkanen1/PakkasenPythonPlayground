@@ -32,6 +32,20 @@ def get_faction_reputations(faction_id: int):
             reputations.append(row.to_dict())
         return reputations
 
+@blueprint.route("/api/factions/<int:faction_id>/with-reputations", methods=["GET"])
+def get_faction_with_reputations(faction_id: int):
+    faction = get_faction(faction_id)
+    reputations = get_faction_reputations(faction_id)
+    reputations_obj = []
+    for r in reputations:
+        obj = {
+            "faction": get_faction(r["target_faction_id"]),
+            "reputation": r["reputation_points"]
+        }
+        reputations_obj.append(obj)
+    faction["reputations"] = reputations_obj
+    return faction
+
 @blueprint.route("/api/factions", methods=["GET"])
 def get_all_factions():
     factions = []
@@ -69,6 +83,20 @@ def get_character_reputations(character_id: int):
         for row in query_result:
             reputations.append(row.to_dict())
         return reputations
+
+@blueprint.route("/api/characters/<int:character_id>/with-reputations", methods=["GET"])
+def get_character_with_reputations(character_id: int):
+    character = get_character(character_id)
+    reputations = get_character_reputations(character_id)
+    reputations_obj = []
+    for r in reputations:
+        obj = {
+            "faction": get_faction(r["faction_id"]),
+            "reputation": r["reputation_points"]
+        }
+        reputations_obj.append(obj)
+    character["reputations"] = reputations_obj
+    return character
 
 @blueprint.route("/api/characters", methods=["GET"])
 def get_all_characters():
