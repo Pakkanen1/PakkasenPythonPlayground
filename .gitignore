@@ -4,3 +4,4 @@ venv
 migrations
 pakkasboxidev.db*
 *__pycache__*
+.env
