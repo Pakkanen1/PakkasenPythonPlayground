@@ -1,4 +1,6 @@
 from flask import Blueprint
+from sqlalchemy.orm import Session
+from pakkasboxi.database import engine
 from .models import Faction, Character, CharacterToFactionReputation, FactionToFactionReputation
 
 blueprint = Blueprint("factions", __name__)
@@ -21,5 +23,10 @@ def get_faction(faction_id: int):
 
 @blueprint.route("/api/factions/<int:faction_id>/reputations", methods=["GET"])
 def get_faction_reputations(faction_id: int):
-    reputations = FactionToFactionReputation.get_by_column_value(column_name="faction_id", value=faction_id)
-    return reputations
+    reputations = []
+    with Session(engine) as session:
+        query_result = session.query(FactionToFactionReputation)\
+            .where(FactionToFactionReputation.faction_id == faction_id)
+        for row in query_result:
+            reputations.append(row.to_dict())
+        return reputations

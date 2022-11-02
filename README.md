@@ -17,6 +17,7 @@ Testidataa:
 --INSERT INTO factions VALUES (1, "testname", "/static/images/factionsymbols/test.png", "test description", "#FF0000", datetime('now'), datetime('now'));
 --INSERT INTO factions VALUES (2, "testname2", "/static/images/factionsymbols/test2.png", "test description2", "#FF0011", datetime('now'), datetime('now'));
 --INSERT INTO factiontofactionreputations VALUES (1, 1, 2, 5, datetime('now'), datetime('now'));
+--INSERT INTO factiontofactionreputations VALUES (2, 2, 1, 10, datetime('now'), datetime('now'));
 --select * from factions;
-select * from factiontofactionreputations;
+--select * from factiontofactionreputations;
 ```

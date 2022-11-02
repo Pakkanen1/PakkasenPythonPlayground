@@ -1,9 +1,12 @@
 import datetime as dt
+from sqlalchemy_serializer import SerializerMixin
 from pakkasboxi.database import Column, Model, SurrogatePK, db, relationship
 
 class Faction(SurrogatePK, Model):
 
     __tablename__ = "factions"
+    serialize_only = ("id", "name", "symbol_filepath", "description", "hex_color")
+
     name = Column(db.String(255), unique=True, nullable=False)
     symbol_filepath = Column(db.String(255), nullable=False)
     description = Column(db.Text, nullable=True)
@@ -18,6 +21,8 @@ class Faction(SurrogatePK, Model):
 class Character(SurrogatePK, Model):
 
     __tablename__ = "characters"
+    serialize_only = ("id", "name", "description", "active", "npc", "hex_color")
+
     name = Column(db.String(255), unique=True, nullable=False)
     description = Column(db.Text, nullable=True)
     # if the character is dead or somehow "inactive" they will not be displayed in the UI
@@ -35,6 +40,8 @@ class Character(SurrogatePK, Model):
 class CharacterToFactionReputation(SurrogatePK, Model):
 
     __tablename__ = "charactertofactionreputations"
+    serialize_only = ("id", "character_id", "faction_id", "reputation_points")
+
     character_id = db.Column(db.Integer, db.ForeignKey("characters.id"), nullable=False)
     character = relationship("Character", foreign_keys=[character_id])
     faction_id = db.Column(db.Integer, db.ForeignKey("factions.id"), nullable=False)
@@ -46,9 +53,11 @@ class CharacterToFactionReputation(SurrogatePK, Model):
     def __init__(self, faction, character, reputation_points, **kwargs):
         db.Model.__init__(self, faction=faction, character=character, reputation_points=reputation_points, **kwargs)
 
-class FactionToFactionReputation(SurrogatePK, Model):
+class FactionToFactionReputation(SurrogatePK, Model, SerializerMixin):
 
     __tablename__ = "factiontofactionreputations"
+    serialize_only = ("id", "faction_id", "target_faction_id", "reputation_points")
+
     faction_id = db.Column(db.Integer, db.ForeignKey("factions.id"), nullable=False)
     faction = relationship("Faction", foreign_keys=[faction_id])
     target_faction_id = db.Column(db.Integer, db.ForeignKey("factions.id"), nullable=False)
