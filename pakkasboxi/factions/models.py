@@ -2,6 +2,19 @@ import datetime as dt
 from sqlalchemy_serializer import SerializerMixin
 from pakkasboxi.database import Column, Model, SurrogatePK, db, relationship
 
+class Campaign(SurrogatePK, Model, SerializerMixin):
+
+    __tablename__ = "campaigns"
+    serialize_only = ("id", "name", "description")
+
+    name = Column(db.String(255), unique=True, nullable=False)
+    description = Column(db.Text, nullable=True)
+    created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+    modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+
+    def __init__(self, name, description, **kwargs):
+        db.Model.__init__(self, name=name, description=description, **kwargs)
+
 class Country(SurrogatePK, Model, SerializerMixin):
 
     __tablename__ = "countries"
@@ -14,6 +27,10 @@ class Country(SurrogatePK, Model, SerializerMixin):
     symbol_filepath = Column(db.String(255), nullable=False)
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+
+    def __init__(self, name, symbol_filepath, description, hex_color, active, **kwargs):
+        db.Model.__init__(self, name=name, symbol_filepath=symbol_filepath, active=active,
+                          description=description, hex_color=hex_color, **kwargs)
 
 class City(SurrogatePK, Model, SerializerMixin):
 
@@ -30,6 +47,10 @@ class City(SurrogatePK, Model, SerializerMixin):
     symbol_filepath = Column(db.String(255), nullable=False)
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
+
+    def __init__(self, name, symbol_filepath, description, hex_color, capital, country_id, active, **kwargs):
+        db.Model.__init__(self, name=name, symbol_filepath=symbol_filepath, active=active, capital=capital,
+                          description=description, hex_color=hex_color, country_id=country_id, **kwargs)
 
 class Faction(SurrogatePK, Model, SerializerMixin):
 
@@ -60,6 +81,8 @@ class Character(SurrogatePK, Model, SerializerMixin):
     active = Column(db.Boolean, default=True)
     npc = Column(db.Boolean, default=False)
     hex_color = Column(db.String(7), nullable=False)
+    campaign_id = db.Column(db.Integer, db.ForeignKey("campaigns.id"), nullable=True)
+    campaign = relationship("Campaign", foreign_keys=[campaign_id])
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
 

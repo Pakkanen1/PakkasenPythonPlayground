@@ -1,7 +1,8 @@
 from flask import Blueprint
 from sqlalchemy.orm import Session
 from pakkasboxi.database import engine
-from .models import Faction, Character, CharacterToFactionReputation, FactionToFactionReputation, City, Country
+from .models import Faction, Character, CharacterToFactionReputation, \
+                    FactionToFactionReputation, City, Country, Campaign
 
 blueprint = Blueprint("factions", __name__)
 
@@ -100,3 +101,22 @@ def get_all_cities():
 @blueprint.route("/api/countries", methods=["GET"])
 def get_all_countries():
     return [c.to_dict() for c in Country.get_all()]
+
+#############
+# Campaigns #
+#############
+
+@blueprint.route("/api/campaigns", methods=["GET"])
+def get_all_campaigns():
+    return [c.to_dict() for c in Campaign.get_all()]
+
+@blueprint.route("/api/campaigns/<int:campaign_id>/characters", methods=["GET"])
+def get_campaign_characters(campaign_id: int):
+    with Session(engine) as s:
+        characters = s.query(Character).where(Character.campaign_id == campaign_id)
+    return [c.to_dict() for c in characters]
+
+@blueprint.route("/api/campaigns/<int:campaign_id>/characters-with-reputations", methods=["GET"])
+def get_reputations_of_campaign_characters(campaign_id: int):
+    characters = get_campaign_characters(campaign_id)
+    return [get_character_with_reputations(c["id"]) for c in characters]
