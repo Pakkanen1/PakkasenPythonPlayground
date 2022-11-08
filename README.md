@@ -14,6 +14,7 @@ Homman saa käyntiin komennolla ``flask run``
 
 Testidataa:
 ```
+INSERT INTO campaigns VALUES (1, "The Rogue Inquisitor of Nordgard", "Campaign set on the continent of Rol'Vetal in the county of Nordgard, within the Empire of Auron.", datetime('now'), datetime('now'));
 INSERT INTO countries VALUES (1, "Auron", "Empire of Auron", "#dbdbdb", 1, "/static/images/countrysymbols/auron.png", datetime('now'), datetime('now'));
 INSERT INTO cities VALUES (1, "Nordbay", "Port city in the country of Nordgard within the Auronian Empire", "#5bb5b2", 1, 0, 1, "/static/images/citysymbols/nordbay.png", datetime('now'), datetime('now'));
 INSERT INTO factions VALUES (1, "Black Horizon", "/static/images/factionsymbols/bhorizon.png", "test description", "#440b5e", 1, datetime('now'), datetime('now'));
@@ -23,9 +24,9 @@ INSERT INTO factions VALUES (4, "The Loyal Shields / Nordbay City Watch", "/stat
 INSERT INTO factiontofactionreputations VALUES (1, 1, 2, 5, datetime('now'), datetime('now'));
 INSERT INTO factiontofactionreputations VALUES (2, 2, 1, 10, datetime('now'), datetime('now'));
 INSERT INTO factiontofactionreputations VALUES (3, 1, 3, 7, datetime('now'), datetime('now'));
-INSERT INTO characters VALUES (1, "Karuna", "Wood-elf monk", 1, 0, "#7db57f", datetime('now'), datetime('now'));
-INSERT INTO characters VALUES (2, "Kilian", "Tabaxi ranger", 1, 0, "#026305", datetime('now'), datetime('now'));
-INSERT INTO characters VALUES (3, "Autismus Maximus", "Dwarven cleric", 1, 0, "#e0e089", datetime('now'), datetime('now'));
+INSERT INTO characters VALUES (1, "Karuna", "Wood-elf monk", 1, 0, "#7db57f", 1, datetime('now'), datetime('now'));
+INSERT INTO characters VALUES (2, "Kilian", "Tabaxi ranger", 1, 0, "#026305", 1, datetime('now'), datetime('now'));
+INSERT INTO characters VALUES (3, "Autismus Maximus", "Dwarven cleric", 1, 0, "#e0e089", 1, datetime('now'), datetime('now'));
 INSERT INTO charactertofactionreputations VALUES (1, 1, 1, 10, datetime('now'), datetime('now'));
 INSERT INTO charactertofactionreputations VALUES (2, 1, 2, 10, datetime('now'), datetime('now'));
 INSERT INTO charactertofactionreputations VALUES (3, 1, 3, 10, datetime('now'), datetime('now'));
