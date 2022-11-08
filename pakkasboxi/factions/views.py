@@ -1,3 +1,4 @@
+from flask_cors import CORS
 from flask import Blueprint
 from sqlalchemy.orm import Session
 from pakkasboxi.database import engine
@@ -5,6 +6,7 @@ from .models import Faction, Character, CharacterToFactionReputation, \
                     FactionToFactionReputation, City, Country, Campaign
 
 blueprint = Blueprint("factions", __name__)
+CORS(blueprint, resources={r"/api/*": {"origins": "*"}})
 
 ############
 # Factions #
