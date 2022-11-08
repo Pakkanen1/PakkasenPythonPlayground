@@ -5,3 +5,4 @@ migrations
 pakkasboxidev.db*
 *__pycache__*
 .env
+*.sock
