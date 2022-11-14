@@ -24,6 +24,11 @@ class SurrogatePK(object):
         with Session(engine) as session:
             return session.query(cls).all()
 
+    @classmethod
+    def get_all_ids(cls):
+        with Session(engine) as session:
+            return [id[0] for id in session.query(cls.id).all()]
+
 
 def get_from_table_by_column_value(table, column_name, value):
     with Session(engine) as session:

@@ -42,6 +42,11 @@ def get_faction_with_reputations(faction_id: int):
     faction["reputations"] = reputation_objects
     return faction
 
+@blueprint.route("/api/factions/with-reputations", methods=["GET"])
+def get_factions_with_reputations():
+    faction_ids = Faction.get_all_ids()
+    return [get_faction_with_reputations(f) for f in faction_ids]
+
 @blueprint.route("/api/factions", methods=["GET"])
 def get_all_factions():
     return [f.to_dict() for f in Faction.get_all()]
