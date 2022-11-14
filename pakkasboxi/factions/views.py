@@ -123,7 +123,41 @@ def get_campaign_characters(campaign_id: int):
         characters = s.query(Character).where(Character.campaign_id == campaign_id)
     return [c.to_dict() for c in characters]
 
+@blueprint.route("/api/campaigns/<int:campaign_id>/factions", methods=["GET"])
+def get_campaign_factions(campaign_id: int):
+    with Session(engine) as session:
+        query_result = session.query(Faction)\
+            .join(FactionToFactionReputation, Faction.id == FactionToFactionReputation.faction_id)\
+            .where(FactionToFactionReputation.campaign_id == campaign_id)
+        return [row.to_dict() for row in query_result]
+
 @blueprint.route("/api/campaigns/<int:campaign_id>/characters-with-reputations", methods=["GET"])
 def get_reputations_of_campaign_characters(campaign_id: int):
     characters = get_campaign_characters(campaign_id)
     return [get_character_with_reputations(c["id"]) for c in characters]
+
+@blueprint.route("/api/campaigns/<int:campaign_id>/faction/<int:faction_id>/with-reputations", methods=["GET"])
+def get_campaign_faction_with_reputations(campaign_id: int, faction_id: int):
+    faction = get_faction(faction_id)
+    reputations = _get_faction_reputations_by_campaign_id(faction_id, campaign_id)
+    reputation_objects = []
+    for r in reputations:
+        obj = {
+            "faction": get_faction(r["target_faction_id"]),
+            "reputation": r["reputation_points"]
+        }
+        reputation_objects.append(obj)
+    faction["reputations"] = reputation_objects
+    return faction
+
+@blueprint.route("/api/campaigns/<int:campaign_id>/factions-with-reputations", methods=["GET"])
+def get_reputations_of_campaign_factions(campaign_id: int):
+    factions = get_campaign_factions(campaign_id)
+    return [get_campaign_faction_with_reputations(campaign_id, f["id"]) for f in factions]
+
+def _get_faction_reputations_by_campaign_id(faction_id: int, campaign_id: int):
+    with Session(engine) as session:
+        query_result = session.query(FactionToFactionReputation)\
+            .where(FactionToFactionReputation.campaign_id == campaign_id,
+                   FactionToFactionReputation.faction_id == faction_id)
+        return [row.to_dict() for row in query_result]

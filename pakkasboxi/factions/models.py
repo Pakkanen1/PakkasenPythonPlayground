@@ -110,13 +110,15 @@ class CharacterToFactionReputation(SurrogatePK, Model, SerializerMixin):
 class FactionToFactionReputation(SurrogatePK, Model, SerializerMixin):
 
     __tablename__ = "factiontofactionreputations"
-    serialize_only = ("id", "faction_id", "target_faction_id", "reputation_points")
+    serialize_only = ("id", "faction_id", "target_faction_id", "reputation_points", "campaign_id")
 
     faction_id = db.Column(db.Integer, db.ForeignKey("factions.id"), nullable=False)
     faction = relationship("Faction", foreign_keys=[faction_id])
     target_faction_id = db.Column(db.Integer, db.ForeignKey("factions.id"), nullable=False)
     target_faction = relationship("Faction", foreign_keys=[target_faction_id])
     reputation_points = db.Column(db.Integer, nullable=False)
+    campaign_id = db.Column(db.Integer, db.ForeignKey("campaigns.id"), nullable=False)
+    campaign = relationship("Campaign", foreign_keys=[campaign_id])
     created_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
     modified_ts = Column(db.DateTime, nullable=False, default=dt.datetime.now)
 
