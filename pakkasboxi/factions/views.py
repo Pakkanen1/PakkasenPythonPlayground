@@ -1,5 +1,5 @@
 from flask_cors import CORS
-from flask import Blueprint
+from flask import Blueprint, render_template
 from sqlalchemy.orm import Session
 from pakkasboxi.database import engine
 from .models import Faction, Character, CharacterToFactionReputation, \
@@ -14,7 +14,7 @@ CORS(blueprint, resources={r"/api/*": {"origins": "*"}})
 
 @blueprint.route("/factionreputation")
 def load_factions_page():
-    return "<p>Coming soon...</p>"
+    return render_template("factionmonitor.html")
 
 @blueprint.route("/api/factions/<int:faction_id>", methods=["GET"])
 def get_faction(faction_id: int):
@@ -161,3 +161,11 @@ def _get_faction_reputations_by_campaign_id(faction_id: int, campaign_id: int):
             .where(FactionToFactionReputation.campaign_id == campaign_id,
                    FactionToFactionReputation.faction_id == faction_id)
         return [row.to_dict() for row in query_result]
+
+######################
+# REPUTATION UPDATES #
+######################
+
+@blueprint.route("/api/update/reputation", methods = ["PATCH"])
+def update_character_reputation_in_faction(data):
+    pass

@@ -1,0 +1,3 @@
+[submodule "pakkasboxi/static/faction-reputation-monitor"]
+	path = pakkasboxi/static/faction-reputation-monitor
+	url = https://github.com/Matsuuu/faction-reputation-monitor.git
