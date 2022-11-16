@@ -1,9 +1,6 @@
-import json
-
 from flask_cors import CORS
 from flask import Blueprint, render_template, request
 from sqlalchemy.orm import Session
-from sqlalchemy import update
 from pakkasboxi.database import engine
 from .models import Faction, Character, CharacterToFactionReputation, \
                     FactionToFactionReputation, City, Country, Campaign

@@ -1,5 +1,7 @@
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy, Model
+from flask_jwt_extended import JWTManager
+from flask_bcrypt import Bcrypt
 
 class CRUDMixin(Model):
     """ Mixin class containing methods for (C)reating, (R)eading, (U)pdating and (D)eleting in the database """
@@ -27,3 +29,4 @@ class CRUDMixin(Model):
 
 db = SQLAlchemy(model_class=CRUDMixin)
 migrate = Migrate()
+bcrypt = Bcrypt()
