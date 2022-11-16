@@ -1,6 +1,9 @@
+import json
+
 from flask_cors import CORS
 from flask import Blueprint, render_template, request
 from sqlalchemy.orm import Session
+from sqlalchemy import update
 from pakkasboxi.database import engine
 from .models import Faction, Character, CharacterToFactionReputation, \
                     FactionToFactionReputation, City, Country, Campaign
@@ -166,7 +169,35 @@ def _get_faction_reputations_by_campaign_id(faction_id: int, campaign_id: int):
 # REPUTATION UPDATES #
 ######################
 
-@blueprint.route("/api/reputation/update", methods=["PATCH"])
-def update_character_reputation_in_faction():
-    data = request.get_json()
-    return data
+@blueprint.route("/api/character-reputation/update", methods=["PATCH"])
+def update_character_reputation_with_faction():
+    request_data = request.get_json()
+    character_id = request_data["character_id"]
+    faction_id = request_data["faction_id"]
+    reputation_to_add = request_data["reputation_to_add"]
+    return _update_character_reputation_to_database(character_id, faction_id, reputation_to_add)
+
+def _update_character_reputation_to_database(character_id: int, faction_id: int, reputation_to_add: int):
+    reputation = CharacterToFactionReputation.query.filter_by(character_id=character_id, faction_id=faction_id).first()
+    if not reputation:
+        return "404"
+    reputation.update(reputation_points=(reputation.reputation_points + reputation_to_add))
+    reputation.save()
+    return reputation.to_dict()
+
+@blueprint.route("/api/faction-reputation/update", methods=["PATCH"])
+def update_faction_reputation_with_another_faction():
+    request_data = request.get_json()
+    faction_id = request_data["faction_id"]
+    target_id = request_data["target_faction_id"]
+    reputation_to_add = request_data["reputation_to_add"]
+    return _update_faction_reputation_to_database(faction_id, target_id, reputation_to_add)
+
+def _update_faction_reputation_to_database(faction_id: int, target_faction_id: int, reputation_to_add: int):
+    reputation = FactionToFactionReputation.query.filter_by(
+        faction_id=faction_id, target_faction_id=target_faction_id).first()
+    if not reputation:
+        return "404"
+    reputation.update(reputation_points=(reputation.reputation_points + reputation_to_add))
+    reputation.save()
+    return reputation.to_dict()
