@@ -6,3 +6,4 @@ pakkasboxidev.db*
 *__pycache__*
 .env
 *.sock
+_send_request.py
