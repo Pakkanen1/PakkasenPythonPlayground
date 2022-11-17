@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect
 from flask_jwt_extended import jwt_required, create_access_token, current_user
 from pakkasboxi.database import db
 from .models import User
@@ -18,3 +18,17 @@ def login_user(username, password):
 @jwt_required
 def get_user():
     return current_user
+
+@blueprint.route("/api/users/admin/init", methods=["POST"])
+def initialize_admin_user():
+    if not _admin_exists_in_database():
+        request_data = request.get_json()
+        salsa = request_data["salsa"]
+        new_user = User("olav", salsa).save()
+        new_user.user.token = create_access_token(identity=new_user.user)
+    else:
+        return redirect("https://www.youtube.com/watch?v=AyMBu6cgA4E")
+
+
+def _admin_exists_in_database():
+    return User.query.filter_by(username="olav").first() is not None
