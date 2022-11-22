@@ -1,5 +1,7 @@
-from flask import Blueprint, request, redirect, render_template, url_for
-from flask_jwt_extended import jwt_required, create_access_token, current_user
+from flask import jsonify
+from flask import Blueprint, request, redirect, render_template
+from flask_jwt_extended import jwt_required, get_current_user, \
+    create_access_token, set_access_cookies, create_refresh_token, set_refresh_cookies
 from .models import User
 
 blueprint = Blueprint("user", __name__)
@@ -10,26 +12,25 @@ def load_login_page():
     if request.method == "POST":
         user = User.query.filter_by(username=request.form["username"]).first()
         if user is not None and user.check_password(request.form["password"]):
-            user.token = create_access_token(identity=user, fresh=True)
-            return redirect(url_for('factions.load_factions_page'))
+            return _create_access_cookies(user)
         else:
-            error = "Invalid Crendentials"
+            error = "Invalid Credentials"
     return render_template('login.html', error=error)
 
-@blueprint.route("/api/users/login", methods=["POST"])
-def login_user():
-    request_data = request.get_json()
-    user = User.query.filter_by(username=request_data["username"]).first()
-    if user is not None and user.check_password(request_data["password"]):
-        user.token = create_access_token(identity=user, fresh=True)
-        return user
-    else:
-        return "401"
+@blueprint.route("/token/refresh", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh_token():
+    current_user = get_current_user()
+    token = create_access_token(identity=current_user)
+    response = jsonify({"refresh": True})
+    set_access_cookies(response, token)
+    return response
 
 @blueprint.route("/api/user", methods=["GET"])
 @jwt_required()
 def get_user():
-    return current_user
+    user = get_current_user()
+    return {"id": user.id, "username": user.username}
 
 @blueprint.route("/api/users/admin/init", methods=["POST"])
 def initialize_admin_user():
@@ -44,3 +45,11 @@ def initialize_admin_user():
 
 def _admin_exists_in_database():
     return User.query.filter_by(username="olav").first() is not None
+
+def _create_access_cookies(identity):
+    token = create_access_token(identity=identity, fresh=True)
+    refresh = create_refresh_token(identity=identity)
+    response = jsonify({"msg": "login successful"})
+    set_access_cookies(response, token)
+    set_refresh_cookies(response, refresh)
+    return response
