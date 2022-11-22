@@ -1,8 +1,20 @@
-from flask import Blueprint, request, redirect
+from flask import Blueprint, request, redirect, render_template, url_for
 from flask_jwt_extended import jwt_required, create_access_token, current_user
 from .models import User
 
 blueprint = Blueprint("user", __name__)
+
+@blueprint.route("/login", methods=["GET", "POST"])
+def load_login_page():
+    error = None
+    if request.method == "POST":
+        user = User.query.filter_by(username=request.form["username"]).first()
+        if user is not None and user.check_password(request.form["password"]):
+            user.token = create_access_token(identity=user, fresh=True)
+            return redirect(url_for('factions.load_factions_page'))
+        else:
+            error = "Invalid Crendentials"
+    return render_template('login.html', error=error)
 
 @blueprint.route("/api/users/login", methods=["POST"])
 def login_user():
@@ -15,7 +27,7 @@ def login_user():
         return "401"
 
 @blueprint.route("/api/user", methods=["GET"])
-@jwt_required
+@jwt_required()
 def get_user():
     return current_user
 

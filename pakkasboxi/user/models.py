@@ -1,10 +1,13 @@
+from sqlalchemy_serializer import SerializerMixin
 from pakkasboxi.database import Column, Model, SurrogatePK, db
 from pakkasboxi.extensions import bcrypt
 import datetime as dt
 
-class User(SurrogatePK, Model):
+class User(SurrogatePK, Model, SerializerMixin):
 
     __tablename__ = "users"
+    serialize_only = ("id", "username", "token")
+
     username = Column(db.String(80), unique=True, nullable=False)
     password_hash = Column(db.String(128), nullable=True)
     created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -25,4 +28,5 @@ class User(SurrogatePK, Model):
         return bcrypt.check_password_hash(self.password_hash, input_password)
 
     def __repr__(self):
-        return str(self.username)
+        return "<User({username!r})>".format(username=self.username)
+

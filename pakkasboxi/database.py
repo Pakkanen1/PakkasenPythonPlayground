@@ -29,9 +29,3 @@ class SurrogatePK(object):
         with Session(engine) as session:
             return [id[0] for id in session.query(cls.id).all()]
 
-
-def get_from_table_by_column_value(table, column_name, value):
-    with Session(engine) as session:
-        query = f"SELECT * FROM {table} where {column_name} = '{value}';"
-        result = session.execute(query)
-        return result.fetchall()
