@@ -38,7 +38,7 @@ class test_factions(unittest.TestCase):
 
     def _create_session(self) -> requests.Session:
         headers = {"User-Agent": "Mozilla/5.0"}
-        form_data = {"username": "olav", "password": "massionhalpaa123"}
+        form_data = {"username": "olav", "password": "montolio on kakkapää"}
         session = requests.Session()
         session.post(f"{TEST_URL}/login", headers=headers, data=form_data)
         return session
