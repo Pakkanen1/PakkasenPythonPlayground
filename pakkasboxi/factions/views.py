@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from pakkasboxi.database import engine
 from .models import Faction, Character, CharacterToFactionReputation, \
                     FactionToFactionReputation, City, Country, Campaign
+from flask_jwt_extended import jwt_required
 
 blueprint = Blueprint("factions", __name__)
 CORS(blueprint, resources={r"/api/*": {"origins": "*"}})
@@ -167,6 +168,7 @@ def _get_faction_reputations_by_campaign_id(faction_id: int, campaign_id: int):
 ######################
 
 @blueprint.route("/api/character-reputation/update", methods=["PATCH"])
+@jwt_required(refresh=True, locations=["headers"])
 def update_character_reputation_with_faction():
     request_data = request.get_json()
     character_id = request_data["character_id"]
@@ -183,6 +185,7 @@ def _update_character_reputation_to_database(character_id: int, faction_id: int,
     return reputation.to_dict()
 
 @blueprint.route("/api/faction-reputation/update", methods=["PATCH"])
+@jwt_required(refresh=True, locations=["headers"])
 def update_faction_reputation_with_another_faction():
     request_data = request.get_json()
     faction_id = request_data["faction_id"]
