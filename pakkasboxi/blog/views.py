@@ -13,3 +13,7 @@ def load_blog_page():
 @blueprint.route("/dadjoke")
 def tell_dadjoke():
     return "<p>Tiesittekö että Pakkanen voi tehdä teistä liukkaita yön aikana?</p>"
+
+@blueprint.route("/my-gm-journey")
+def tell_dadjoke():
+    return "<p>Tiesittekö että Pakkanen voi tehdä teistä liukkaita yön aikana?</p>"
