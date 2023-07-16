@@ -4,7 +4,7 @@ blueprint = Blueprint("blog", __name__)
 
 @blueprint.route("/")
 def load_index_page():
-    return load_blog_page()
+    return render_template("index.html")
 
 @blueprint.route("/blog")
 def load_blog_page():
@@ -15,5 +15,5 @@ def tell_dadjoke():
     return "<p>Tiesittekö että Pakkanen voi tehdä teistä liukkaita yön aikana?</p>"
 
 @blueprint.route("/my-gm-journey")
-def tell_dadjoke():
-    return "<p>Tiesittekö että Pakkanen voi tehdä teistä liukkaita yön aikana?</p>"
+def load_gm_journey_page():
+    return render_template("gmjourney.html")

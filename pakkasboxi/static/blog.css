@@ -3,3 +3,17 @@ body {
     margin: auto;
     font-family: Tahoma, Verdana, Arial, sans-serif;
 }
+
+.adventure-card {
+    border-style: groove;
+    border-width: 5px;
+    max-width: 25em;
+    margin: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 30px;
+}
+
+.adventure-card > img {
+    width: 100%;
+}
