@@ -1,5 +1,6 @@
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy, Model
+from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy.extension import Model
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 
