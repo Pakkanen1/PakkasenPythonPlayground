@@ -17,3 +17,8 @@ def tell_dadjoke():
 @blueprint.route("/my-gm-journey")
 def load_gm_journey_page():
     return render_template("gmjourney.html")
+
+@blueprint.route("/enigmaoferyx")
+def load_gm_journey_page():
+    return render_template("enigmaoferyx.html")
+
