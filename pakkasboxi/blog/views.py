@@ -19,6 +19,6 @@ def load_gm_journey_page():
     return render_template("gmjourney.html")
 
 @blueprint.route("/enigmaoferyx")
-def load_gm_journey_page():
+def load_engima_of_eryx():
     return render_template("enigmaoferyx.html")
 
