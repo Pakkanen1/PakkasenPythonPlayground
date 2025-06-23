@@ -1,7 +1,7 @@
 from flask import Flask
 from pakkasboxi.extensions import db, migrate, jwt, bcrypt
 from pakkasboxi.settings import DevConfig
-from pakkasboxi import blog, factions, user
+from pakkasboxi import blog, factions, user, tools
 from pakkasboxi.user.models import User
 
 def create_app(config_obj=DevConfig):
@@ -23,6 +23,7 @@ def register_blueprints(app):
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(blog.views.blueprint)
     app.register_blueprint(factions.views.blueprint)
+    app.register_blueprint(tools.views.blueprint)
 
 @jwt.user_identity_loader
 def user_identity_loader(user_object):

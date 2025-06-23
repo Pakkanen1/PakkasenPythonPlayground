@@ -19,3 +19,14 @@ body {
     width: 100%;
     border-radius: 30px;
 }
+
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
+.subcycle {
+  display: inline-block;
+  max-width: 25em;
+}

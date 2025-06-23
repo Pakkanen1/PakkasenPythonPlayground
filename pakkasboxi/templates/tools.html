@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/blog.css">
+    <title>pakkanen.dev</title>
+</head>
+<body>
+    <div id="tools" class="tools-view">
+        <h1>Tools</h1>
+        <p>This page is dedicated to TTRPG tools</p>
+    </div>
+    <div id="cyclic" class="tools-view">
+        <h2>Cyclic Dungeon Generator</h2>
+        <label for="cycles">Amount of subcycles</label>
+        <input type="number" name="cycles" id="cycles" placeholder="2" />
+        <input type="submit" name="submittaa" value="generate" />
+        <div class="center">
+            <h3>Overall Cycle: {{cyclic_dungeon.overall_cycle}}</h3>
+            <img alt="overall cycle" src="/static/tools/cyclic/{{cyclic_dungeon.overall_cycle}}.png" />
+        </div>
+
+            {%for sc in cyclic_dungeon.subcycles%}
+            <div class="row subcycle">
+                    <h4>Subcycle: {{sc.cycle_name}}</h4>
+                    <ul>
+                    {%for i in sc.info%}
+                        <li>{{i}}</li>
+                    {%endfor%}
+                    </ul>
+                    <img alt="subcycle" src="/static/tools/cyclic/{{sc.cycle_name}}.png" />
+            </div>
+            {%endfor%}
+
+    </div>
+</body>
