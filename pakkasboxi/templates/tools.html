@@ -13,9 +13,11 @@
     </div>
     <div id="cyclic" class="tools-view">
         <h2>Cyclic Dungeon Generator</h2>
-        <label for="cycles">Amount of subcycles</label>
-        <input type="number" name="cycles" id="cycles" placeholder="2" />
-        <input type="submit" name="submittaa" value="generate" />
+        <form action="/tools/generate-cycles" method="post">
+            <label for="cycles">Amount of subcycles</label>
+            <input type="number" name="cycles" id="cycles" placeholder="2" />
+            <input type="submit" name="submittaa" value="generate" />
+        </form>
         <div class="center">
             <h3>Overall Cycle: {{cyclic_dungeon.overall_cycle}}</h3>
             <img alt="overall cycle" src="/static/tools/cyclic/{{cyclic_dungeon.overall_cycle}}.png" />

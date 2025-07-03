@@ -2,13 +2,16 @@ import json
 import random
 from flask_cors import CORS
 from .models import CyclicDungeon, CycleType, Lock, Barrier
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 blueprint = Blueprint("tools", __name__)
 CORS(blueprint, resources={r"/api/*": {"origins": "*"}})
 
+@blueprint.route("/tools/generate-cycles", defaults={"cycle_amount": 0}, methods=["GET", "POST"])
 @blueprint.route("/tools/generate-cycles/<int:cycle_amount>")
 def load_tools_page(cycle_amount: int):
+    if request.method == "POST":
+        cycle_amount = int(request.form.get("cycles"))
     dungeon = get_cyclic_dungeon(cycle_amount)
     return render_template("tools.html", cyclic_dungeon=dungeon)
 
