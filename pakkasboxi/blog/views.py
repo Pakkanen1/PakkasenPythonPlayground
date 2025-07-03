@@ -22,3 +22,6 @@ def load_gm_journey_page():
 def load_engima_of_eryx():
     return render_template("enigmaoferyx.html")
 
+@blueprint.route("/wargholm")
+def load_wargholm():
+    return render_template("wargholm.html")
