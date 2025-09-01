@@ -25,3 +25,7 @@ def load_engima_of_eryx():
 @blueprint.route("/wargholm")
 def load_wargholm():
     return render_template("wargholm.html")
+
+@blueprint.route("/spiralprince")
+def load_spiral_prince_ascends():
+    return render_template("spiralprince.html")
