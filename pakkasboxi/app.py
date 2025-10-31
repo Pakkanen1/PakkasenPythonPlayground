@@ -3,9 +3,11 @@ from pakkasboxi.extensions import db, migrate, jwt, bcrypt
 from pakkasboxi.settings import DevConfig
 from pakkasboxi import blog, factions, user, tools
 from pakkasboxi.user.models import User
+from flask_cors import CORS
 
 def create_app(config_obj=DevConfig):
     app = Flask(__name__)
+    CORS(app, origins=["http://localhost:8000","http://127.0.0.1:5000"])
     app.config.from_object(config_obj)
     register_extensions(app)
     register_blueprints(app)

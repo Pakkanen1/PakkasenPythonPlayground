@@ -1,7 +1,6 @@
-import json
 import random
 from flask_cors import CORS
-from .models import CyclicDungeon, CycleType, Lock, Barrier
+from .models import CyclicDungeon, CycleType, Lock, Barrier, RandomTable, RandomTableDatabase
 from flask import Blueprint, render_template, request
 
 blueprint = Blueprint("tools", __name__)
@@ -13,7 +12,8 @@ def load_tools_page(cycle_amount: int):
     if request.method == "POST":
         cycle_amount = int(request.form.get("cycles"))
     dungeon = get_cyclic_dungeon(cycle_amount)
-    return render_template("tools.html", cyclic_dungeon=dungeon)
+    tables = get_random_table_database()
+    return render_template("tools.html", cyclic_dungeon=dungeon, random_tables=tables)
 
 @blueprint.route("/api/tools/cyclic/<int:cycle_amount>", methods=["GET"])
 def get_cyclic_dungeon(cycle_amount: int):
@@ -55,3 +55,21 @@ def _generate_cycle():
             lock = random.choice(list(Lock))
             return cycle.name, [lock.value]
     return cycle.name, []
+
+@blueprint.route("/tools/random-tables/db", methods=["GET"])
+def get_random_table_database() -> RandomTableDatabase:
+    filepath = "/home/repa/randomtables2.json"
+    return RandomTableDatabase(filepath)
+
+@blueprint.route("/api/tools/random-tables/names", methods=["GET"])
+def get_random_table_names():
+    tables = get_random_table_database()
+    d = dict(tables.data).keys()
+    return {"names": list(d)}
+
+@blueprint.route("/api/tools/random-tables/<string:table_name>", methods=["GET"])
+def get_item_from_random_table(table_name: str):
+    tables = get_random_table_database()
+    target_table = tables[table_name]
+    return {"result": random.choice(target_table)}
+

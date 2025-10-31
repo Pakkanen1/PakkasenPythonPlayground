@@ -11,6 +11,12 @@
         <h1>Tools</h1>
         <p>This page is dedicated to TTRPG tools</p>
     </div>
+    <div id="random-tables" class="tools-view">
+        <h2>Random Tables</h2>
+        {%for t in random_tables%}
+            <h3>{{t.table_name}}</h3>
+        {%endfor%}
+    </div>
     <div id="cyclic" class="tools-view">
         <h2>Cyclic Dungeon Generator</h2>
         <form action="/tools/generate-cycles" method="post">

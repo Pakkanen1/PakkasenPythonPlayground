@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 
 class CycleType(Enum):
@@ -38,3 +39,25 @@ class CyclicDungeon:
 
     def to_dict(self):
         return {'overall_cycle': self.overall_cycle, 'subcycles': self.subcycles}
+
+class RandomTableDatabase:
+    def __init__(self, db_path: str):
+        with open(db_path, 'r') as f:
+            self.data = json.load(f)
+
+    def __getitem__(self, key):
+        if key in self.data:
+            return self.data[key]
+        else:
+            raise KeyError(f"Key '{key}' not found")
+
+    def to_dict(self):
+        return {"data": self.data}
+
+class RandomTable:
+    def __init__(self, table_name: str, table: list[str]):
+        self.table_name = table_name
+        self.table = table
+
+    def to_dict(self):
+        return {'table_name': self.table_name, 'table': self.table}
