@@ -42,7 +42,7 @@ class CyclicDungeon:
 
 class RandomTableDatabase:
     def __init__(self, db_path: str):
-        with open(db_path, 'r') as f:
+        with open(db_path, 'r', encoding="utf-8") as f:
             self.data = json.load(f)
 
     def __getitem__(self, key):

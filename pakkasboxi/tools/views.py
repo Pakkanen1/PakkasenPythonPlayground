@@ -58,6 +58,7 @@ def _generate_cycle():
 
 @blueprint.route("/tools/random-tables/db", methods=["GET"])
 def get_random_table_database() -> RandomTableDatabase:
+    #filepath = "C:\\gitnation\\randomtables\\randomtables22.json"
     filepath = "/home/repa/randomtables2.json"
     return RandomTableDatabase(filepath)
 
