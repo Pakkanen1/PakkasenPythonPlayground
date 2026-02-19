@@ -29,3 +29,7 @@ def load_wargholm():
 @blueprint.route("/spiralprince")
 def load_spiral_prince_ascends():
     return render_template("spiralprince.html")
+
+@blueprint.route("/ikari")
+def load_ikari():
+    return render_template("nightmarezoneofikari.html")
