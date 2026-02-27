@@ -1,7 +1,7 @@
 from flask import Flask
 from pakkasboxi.extensions import db, migrate, jwt, bcrypt
 from pakkasboxi.settings import DevConfig
-from pakkasboxi import blog, factions, user, tools
+from pakkasboxi import blog, factions, user, tools, spells
 from pakkasboxi.user.models import User
 from flask_cors import CORS
 
@@ -26,6 +26,7 @@ def register_blueprints(app):
     app.register_blueprint(blog.views.blueprint)
     app.register_blueprint(factions.views.blueprint)
     app.register_blueprint(tools.views.blueprint)
+    app.register_blueprint(spells.views.blueprint)
 
 @jwt.user_identity_loader
 def user_identity_loader(user_object):
