@@ -4,6 +4,10 @@ from flask import Blueprint, render_template
 blueprint = Blueprint("spells", __name__)
 CORS(blueprint, resources={r"/api/*": {"origins": "*"}})
 
+@blueprint.route("/spells", methods=["GET"])
+def load_spells_page():
+    return render_template("spells.html")
+
 @blueprint.route("/spells/mage",methods=["GET", "POST"])
 def load_mage_page():
     return render_template("spells/mage.html")
